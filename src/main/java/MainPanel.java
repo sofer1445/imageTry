@@ -48,10 +48,15 @@ public class MainPanel extends JPanel {
         driver.get("https://touch.facebook.com/");
         driver.manage().window().maximize();
         Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("start: new Thread");
-            WebElement enterEmail = driver.findElement(By.id("email"));
+            WebElement enterEmail = driver.findElement(By.id("m_login_email"));
             enterEmail.sendKeys(this.email);
-            WebElement enterPass = driver.findElement(By.id("pass"));
+            WebElement enterPass = driver.findElement(By.id("m_login_password"));
             enterPass.sendKeys(this.password);
             try {
                 Thread.sleep(Final.SLEEP);
@@ -102,9 +107,8 @@ public class MainPanel extends JPanel {
             }
             try {
                 Thread.sleep(Final.SLEEP2);
-                List<WebElement> thisImage = driver.findElements(By.className("_2vja mfss fcg")); // למצוא את הקישור לתמונה
-                System.out.println(thisImage + ", " +  thisImage.size());
-//            this.url = new URL(thisImage.getAttribute("src"));
+                WebElement thisImage = driver.findElement(By.className("_2vja mfss fcg")); // למצוא את הקישור לתמונה
+            this.url = new URL(thisImage.getAttribute("src"));
             PanelImage panelImage = new PanelImage(Final.X_AND_Y,Final.X_AND_Y,Final.WINDOW_WIDTH,Final.WINDOW_HEIGHT,url);
             this.newPanel = panelImage;
             this.add(newPanel);
