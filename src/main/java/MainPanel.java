@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 //מטלה של עיבוד תמונה אופן שימוש: צעד ראשון הכנסת פרטי פייסבוק (שם משתמש וסיסמא) באופן חד פעמי
 // אחר כך הכנסת פרופיל פייסבוק (שם החשבון המיועד) בתיבת הטקסט(search)
@@ -41,13 +42,13 @@ public class MainPanel extends JPanel {
         this.options = new ChromeOptions();
     }
 
-    public void loginToAFacebookAccount() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\sofer\\OneDrive\\שולחן העבודה\\image\\chromedriver_win32 (1)\\chromedriver.exe");//שוהם
-        options.addArguments("user-data-dir=C:\\Users\\sofer\\AppData\\Local\\Google\\Chrome\\User Data\\Default");
-        this.driver = new ChromeDriver(options);
-        driver.get("https://he-il.facebook.com/");
+    public void loginToAFacebookAccount() throws InterruptedException {
+        System.out.println(this.email +"," + this.password);
+        editDriver();
+        driver.get("https://touch.facebook.com/");
         driver.manage().window().maximize();
         Thread thread = new Thread(() -> {
+            System.out.println("start: new Thread");
             WebElement enterEmail = driver.findElement(By.id("email"));
             enterEmail.sendKeys(this.email);
             WebElement enterPass = driver.findElement(By.id("pass"));
@@ -64,38 +65,56 @@ public class MainPanel extends JPanel {
         thread.start();
 
     }
+    public void editDriver(){
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\sofer\\OneDrive\\שולחן העבודה\\שוהם\\chromedriver_win32 (1)\\chromedriver.exe");//שוהם
+        options.addArguments("user-data-dir=C:\\Users\\sofer\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 2\\Default");
+        this.driver = new ChromeDriver(options);
+    }
 
     public void FindingPeopleAndTakingAPicture() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\sofer\\OneDrive\\שולחן העבודה\\image\\chromedriver_win32 (1)\\chromedriver.exe");//שוהם
-        options.addArguments("user-data-dir=C:\\Users\\sofer\\AppData\\Local\\Google\\Chrome\\User Data\\Default");
-        this.driver = new ChromeDriver(options);
-        driver.get("https://he-il.facebook.com/");
+        editDriver();
+        driver.get("https://touch.facebook.com/");
         driver.manage().window().maximize();
-        System.out.println("start: FindingPeopleAndTakingAPicture");
-        WebElement webElement = driver.findElement(By.cssSelector("div[aria-label='חפש בפייסבוק']"));
-        webElement.click();
+        System.out.println("start: new Thread");
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(Final.SLEEP2);
+                System.out.println("start: FindingPeopleAndTakingAPicture");
+                WebElement webElement = driver.findElement(By.cssSelector("i[class='_7izy img sp_pjlwJF1zHy3 sx_7ba5b6']"));
+                webElement.click();
         Thread.sleep(Final.SLEEP2);
-        WebElement typeName = driver.findElement(By.cssSelector("input[role='combobox']"));
-        typeName.sendKeys(this.userName);
+                WebElement typeName = driver.findElement(By.id("main-search-input"));
+                typeName.sendKeys(this.userName);
         Thread.sleep(Final.SLEEP2);
-        WebElement click = driver.findElement(By.cssSelector("span[class='d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh a8c37x1j fe6kdd0r mau55g9w c8b282yb keod5gw0 nxhoafnm aigsh9s9 d9wwppkn iv3no6db e9vueds3 j5wam9gi b1v8xokw m9osqain hzawbc8m']"));
-        click.click();
+                WebElement clickName = driver.findElement(By.cssSelector("span[class='_7msl']"));
+                clickName.click();
         Thread.sleep(Final.SLEEP2);
-        WebElement imagePro = driver.findElement(By.cssSelector("image[style='height: 168px; width: 168px;']"));
-        imagePro.click();
+                WebElement firstUserName = driver.findElement(By.cssSelector("div[class='_a5o _9_7 _2rgt _1j-g _2rgt _86-3 _2rgt _1j-g _2rgt']"));
+                firstUserName.click();
         Thread.sleep(Final.SLEEP2);
-        WebElement thisImage = driver.findElement(By.cssSelector("img[class='ji94ytn4 d2edcug0 r9f5tntg r0294ipz']"));
-        try {
-            this.url = new URL(thisImage.getAttribute("src"));
+                WebElement firstImage = driver.findElement(By.cssSelector("i[class='img _1-yc profpic']"));
+                firstImage.click();
+        Thread.sleep(Final.SLEEP2);
+                WebElement finelImage = driver.findElement(By.cssSelector("a[target='_blank']"));
+                finelImage.click();
+            }catch (Exception exception){
+                System.out.println(exception);
+            }
+            try {
+                Thread.sleep(Final.SLEEP2);
+                List<WebElement> thisImage = driver.findElements(By.className("_2vja mfss fcg")); // למצוא את הקישור לתמונה
+                System.out.println(thisImage + ", " +  thisImage.size());
+//            this.url = new URL(thisImage.getAttribute("src"));
             PanelImage panelImage = new PanelImage(Final.X_AND_Y,Final.X_AND_Y,Final.WINDOW_WIDTH,Final.WINDOW_HEIGHT,url);
             this.newPanel = panelImage;
             this.add(newPanel);
             repaint();
 
         } catch (Exception e) {
-            System.out.println("doesnt have");
+            System.out.println("Catch error: " + e);
         }
-        
+        });
+        thread.start();
     }
 
 
@@ -274,7 +293,3 @@ public class MainPanel extends JPanel {
         return grayscale;
     }
 }
-
-
-
-
