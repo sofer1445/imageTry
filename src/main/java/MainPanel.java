@@ -2,16 +2,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-import java.awt.image.BufferedImage;
-import java.util.List;
 
-//מטלה של עיבוד תמונה אופן שימוש: צעד ראשון הכנסת פרטי פייסבוק (שם משתמש וסיסמא) באופן חד פעמי
-// אחר כך הכנסת פרופיל פייסבוק (שם החשבון המיועד) בתיבת הטקסט(search)
-// ואז לחיצה על כפתור החיפוש.
-// נ.ב חייב פרופיל הפייסבוק המבוקש להיות חבר של החשבון שלך ורק לאחר שהינכם חברים תוכל לייבא את התמונה.
+import java.awt.image.BufferedImage;
+
 
 public class MainPanel extends JPanel {
 
@@ -42,21 +41,16 @@ public class MainPanel extends JPanel {
         this.options = new ChromeOptions();
     }
 
-    public void loginToAFacebookAccount() throws InterruptedException {
-        System.out.println(this.email +"," + this.password);
+    public void loginToAFacebookAccount() {
+        //     System.setProperty("webdriver.chrome.driver", "C:\\Users\\sofer\\OneDrive\\שולחן העבודה\\image\\chromedriver_win32 (1)\\chromedriver.exe");//שוהם
+        //     options.addArguments("user-data-dir=C:\\Users\\sofer\\AppData\\Local\\Google\\Chrome\\User Data\\Default");
         editDriver();
-        driver.get("https://touch.facebook.com/");
+        driver.get("https://he-il.facebook.com/");
         driver.manage().window().maximize();
         Thread thread = new Thread(() -> {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("start: new Thread");
-            WebElement enterEmail = driver.findElement(By.id("m_login_email"));
+            WebElement enterEmail = driver.findElement(By.id("email"));
             enterEmail.sendKeys(this.email);
-            WebElement enterPass = driver.findElement(By.id("m_login_password"));
+            WebElement enterPass = driver.findElement(By.id("pass"));
             enterPass.sendKeys(this.password);
             try {
                 Thread.sleep(Final.SLEEP);
@@ -76,38 +70,28 @@ public class MainPanel extends JPanel {
         this.driver = new ChromeDriver(options);
     }
 
+
     public void FindingPeopleAndTakingAPicture() throws InterruptedException {
+        //    System.setProperty("webdriver.chrome.driver", "C:\\Users\\sofer\\OneDrive\\שולחן העבודה\\image\\chromedriver_win32 (1)\\chromedriver.exe");//שוהם
+        //  options.addArguments("user-data-dir=C:\\Users\\sofer\\AppData\\Local\\Google\\Chrome\\User Data\\Default");
         editDriver();
-        driver.get("https://touch.facebook.com/");
+        driver.get("https://he-il.facebook.com/");
         driver.manage().window().maximize();
-        System.out.println("start: new Thread");
-        Thread thread = new Thread(() -> {
-            try {
-                Thread.sleep(Final.SLEEP2);
-                System.out.println("start: FindingPeopleAndTakingAPicture");
-                WebElement webElement = driver.findElement(By.cssSelector("i[class='_7izy img sp_pjlwJF1zHy3 sx_7ba5b6']"));
-                webElement.click();
+        System.out.println("start: FindingPeopleAndTakingAPicture");
+        WebElement webElement = driver.findElement(By.cssSelector("div[aria-label='חפש בפייסבוק']"));
+        webElement.click();
         Thread.sleep(Final.SLEEP2);
-                WebElement typeName = driver.findElement(By.id("main-search-input"));
-                typeName.sendKeys(this.userName);
+        WebElement typeName = driver.findElement(By.cssSelector("input[role='combobox']"));
+        typeName.sendKeys(this.userName);
         Thread.sleep(Final.SLEEP2);
-                WebElement clickName = driver.findElement(By.cssSelector("span[class='_7msl']"));
-                clickName.click();
+        WebElement click = driver.findElement(By.cssSelector("span[class='d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh a8c37x1j fe6kdd0r mau55g9w c8b282yb keod5gw0 nxhoafnm aigsh9s9 d9wwppkn iv3no6db e9vueds3 j5wam9gi b1v8xokw m9osqain hzawbc8m']"));
+        click.click();
         Thread.sleep(Final.SLEEP2);
-                WebElement firstUserName = driver.findElement(By.cssSelector("div[class='_a5o _9_7 _2rgt _1j-g _2rgt _86-3 _2rgt _1j-g _2rgt']"));
-                firstUserName.click();
+        WebElement imagePro = driver.findElement(By.cssSelector("image[style='height: 168px; width: 168px;']"));
+        imagePro.click();
         Thread.sleep(Final.SLEEP2);
-                WebElement firstImage = driver.findElement(By.cssSelector("i[class='img _1-yc profpic']"));
-                firstImage.click();
-        Thread.sleep(Final.SLEEP2);
-                WebElement finelImage = driver.findElement(By.cssSelector("a[target='_blank']"));
-                finelImage.click();
-            }catch (Exception exception){
-                System.out.println(exception);
-            }
-            try {
-                Thread.sleep(Final.SLEEP2);
-                WebElement thisImage = driver.findElement(By.className("_2vja mfss fcg")); // למצוא את הקישור לתמונה
+        WebElement thisImage = driver.findElement(By.cssSelector("img[class='ji94ytn4 d2edcug0 r9f5tntg r0294ipz']"));//לא עובד צריך למצוא איך למשוך את קישור התמונה
+        try {
             this.url = new URL(thisImage.getAttribute("src"));
             PanelImage panelImage = new PanelImage(Final.X_AND_Y,Final.X_AND_Y,Final.WINDOW_WIDTH,Final.WINDOW_HEIGHT,url);
             this.newPanel = panelImage;
@@ -115,10 +99,9 @@ public class MainPanel extends JPanel {
             repaint();
 
         } catch (Exception e) {
-            System.out.println("Catch error: " + e);
+            System.out.println("doesnt have");
         }
-        });
-        thread.start();
+
     }
 
 
@@ -229,7 +212,7 @@ public class MainPanel extends JPanel {
                 if (currentRed >= Final.NEW_COLOR) {
                     currentRed = Final.NEW_COLOR;
                 }
-                int currentGreen = (int) (currentColor.getRed() * Final.CURRENT_RED2 + currentColor.getGreen() * Final.CURRENT_GREEN2 + currentColor.getBlue() * Final.CURRENT_BLUE2);
+                int currentGreen = (int) (currentColor.getRed() * Final.CURRENT_RED2+ currentColor.getGreen() * Final.CURRENT_GREEN2 + currentColor.getBlue() * Final.CURRENT_BLUE2);
                 if (currentGreen >= Final.NEW_COLOR) {
                     currentGreen = Final.NEW_COLOR;
                 }
