@@ -2,15 +2,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-
 import java.awt.image.BufferedImage;
 
+//מטלה של עיבוד תמונה אופן שימוש: צעד ראשון הכנסת פרטי פייסבוק (שם משתמש וסיסמא) באופן חד פעמי
+// אחר כך הכנסת פרופיל פייסבוק (שם החשבון המיועד) בתיבת הטקסט(search)
+// ואז לחיצה על כפתור החיפוש.
+// נ.ב חייב פרופיל הפייסבוק המבוקש להיות חבר של החשבון שלך ורק לאחר שהינכם חברים תוכל לייבא את התמונה.
 
 public class MainPanel extends JPanel {
 
@@ -90,7 +90,7 @@ public class MainPanel extends JPanel {
         WebElement imagePro = driver.findElement(By.cssSelector("image[style='height: 168px; width: 168px;']"));
         imagePro.click();
         Thread.sleep(Final.SLEEP2);
-        WebElement thisImage = driver.findElement(By.cssSelector("img[class='ji94ytn4 d2edcug0 r9f5tntg r0294ipz']"));//לא עובד צריך למצוא איך למשוך את קישור התמונה
+        WebElement thisImage = driver.findElement(By.cssSelector("img[class='ji94ytn4 d2edcug0 r9f5tntg r0294ipz']"));
         try {
             this.url = new URL(thisImage.getAttribute("src"));
             PanelImage panelImage = new PanelImage(Final.X_AND_Y,Final.X_AND_Y,Final.WINDOW_WIDTH,Final.WINDOW_HEIGHT,url);
